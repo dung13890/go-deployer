@@ -1,0 +1,12 @@
+webservers:
+  hosts:
+    server1:
+      address: "3.234.143.13"
+      user: "ec2-user"
+      dir: "/var/www/project"
+    server2:
+      address: "3.94.20.59"
+      user: "ec2-user"
+      dir: "/var/www/project"
+  tasks:
+    - "install"

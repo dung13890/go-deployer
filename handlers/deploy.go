@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func Connection(s Server) {
+func connection(s Server) {
 	cmd := exec.Command(
 		"ssh",
 		"-t",

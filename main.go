@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -18,11 +17,4 @@ func main() {
 	log.SetOutput(file)
 
 	handlers.Run()
-
-	c := handlers.Configuration{}
-	c.ReadFile()
-
-	for _, server := range c.WebServers.Hosts {
-		fmt.Printf("%s@%s", server.User, server.Address)
-	}
 }

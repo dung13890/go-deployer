@@ -2,6 +2,32 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:6481b321e52388f6d8a66f6f0fb8cd64c51a704acc9b94b793579f19dc87aa49"
+  name = "golang.org/x/crypto"
+  packages = [
+    "blowfish",
+    "chacha20",
+    "curve25519",
+    "ed25519",
+    "ed25519/internal/edwards25519",
+    "internal/subtle",
+    "poly1305",
+    "ssh",
+    "ssh/internal/bcrypt_pbkdf",
+  ]
+  pruneopts = "UT"
+  revision = "4b2356b1ed79e6be3deca3737a3db3d132d2847a"
+
+[[projects]]
+  branch = "master"
+  digest = "1:0110babbeb34e338aca6f831fcd8c4eb32a5e5844ca1b8d25a95a56308028e53"
+  name = "golang.org/x/sys"
+  packages = ["cpu"]
+  pruneopts = "UT"
+  revision = "10377860bb8e8e259ba97296f3b7656772f975bc"
+
+[[projects]]
   digest = "1:55b110c99c5fdc4f14930747326acce56b52cfce60b24b1c03ef686ac0e46bb1"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -12,6 +38,9 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = ["gopkg.in/yaml.v2"]
+  input-imports = [
+    "golang.org/x/crypto/ssh",
+    "gopkg.in/yaml.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

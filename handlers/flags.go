@@ -143,24 +143,24 @@ func Run() {
 			printCommand(deployCommand)
 			os.Exit(1)
 		}
-		// TODO
-		fmt.Printf("tag=%v", *deployCommand.StringFlags["tag"])
-		fmt.Printf("branch=%v", *deployCommand.StringFlags["branch"])
+		tag := *deployCommand.StringFlags["tag"]
+		branch := *deployCommand.StringFlags["branch"]
+		deploy(tag, branch)
 	}
 	if pingCommand.Flag.Parsed() {
 		if *pingCommand.BoolFlags["help"] {
 			printCommand(pingCommand)
 			os.Exit(1)
 		}
-		// TODO
-		fmt.Printf("%v", pingCommand)
+
+		ping()
 	}
 	if copyCommand.Flag.Parsed() {
 		if *copyCommand.BoolFlags["help"] {
 			printCommand(copyCommand)
 			os.Exit(1)
 		}
-		// TODO
-		fmt.Printf("%v", copyCommand)
+
+		copy()
 	}
 }

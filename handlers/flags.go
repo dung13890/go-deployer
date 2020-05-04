@@ -153,7 +153,8 @@ func Run() {
 			os.Exit(1)
 		}
 
-		ping()
+		p := ping{}
+		p.run()
 	}
 	if copyCommand.Flag.Parsed() {
 		if *copyCommand.BoolFlags["help"] {

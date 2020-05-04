@@ -13,6 +13,14 @@ const (
 	colorReset   = "\033[0m"
 )
 
+var clientColors = []string{
+	"\033[32m", // green
+	"\033[33m", // yellow
+	"\033[34m", // blue
+	"\033[36m", // cyan
+	"\033[35m", // magenta
+}
+
 func fillColor(text string, color string) string {
 	return fmt.Sprintf("%s%s%s", color, text, colorReset)
 }

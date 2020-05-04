@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -83,9 +84,20 @@ func (r *remoteScript) close() error {
 func test() {
 	c := Configuration{}
 	c.ReadFile()
-	pathKey := filepath.Join(os.Getenv("HOME"), ".ssh", "id_rsa")
+	pathKey := c.Setting.PathKey
+	if pathKey != "" {
+		pathKey = strings.Replace(pathKey, "~", os.Getenv("HOME"), 1)
+		pathKey, err := filepath.Abs(pathKey)
+		fmt.Println(pathKey)
+		if err != nil {
+			log.Fatal("Warning: path file of rsa key is not exists")
+		}
+	} else {
+		pathKey = filepath.Join(os.Getenv("HOME"), ".ssh", "id_rsa")
+	}
 
-	for k, s := range c.WebServers.Hosts {
+	fmt.Println(pathKey)
+	for k, s := range c.Hosts {
 		out := bytes.Buffer{}
 		r := &remoteScript{}
 		r.Stdout = &out

@@ -1,14 +1,10 @@
 package handlers
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
-	"os"
-	"path/filepath"
-	"strings"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -79,33 +75,4 @@ func (r *remoteScript) close() error {
 	err := r.Conn.Close()
 
 	return err
-}
-
-func test() {
-	c := Configuration{}
-	c.ReadFile()
-	pathKey := c.Setting.PathKey
-	if pathKey != "" {
-		pathKey = strings.Replace(pathKey, "~", os.Getenv("HOME"), 1)
-		pathKey, err := filepath.Abs(pathKey)
-		fmt.Println(pathKey)
-		if err != nil {
-			log.Fatal("Warning: path file of rsa key is not exists")
-		}
-	} else {
-		pathKey = filepath.Join(os.Getenv("HOME"), ".ssh", "id_rsa")
-	}
-
-	fmt.Println(pathKey)
-	for k, s := range c.Hosts {
-		out := bytes.Buffer{}
-		r := &remoteScript{}
-		r.Stdout = &out
-		if err := r.connection(s.Address, s.User, pathKey); err != nil {
-			log.Fatalf("Error: %v", err)
-		}
-		r.run("uname -a")
-		r.Color = colorMagenta
-		fmt.Printf("%s:%s", fillColor(k, r.Color), fillColor(string(out.Bytes()), r.Color))
-	}
 }

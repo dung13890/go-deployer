@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/dung13890/go-deployer/config"
 	"github.com/dung13890/go-deployer/handlers"
 )
 
@@ -25,6 +26,8 @@ func main() {
 	}
 	defer file.Close()
 	log.SetOutput(file)
+	c := config.Configuration{}
+	c.ReadFile()
 
-	handlers.Run()
+	handlers.Run(c)
 }

@@ -1,16 +1,15 @@
-webservers:
-  hosts:
-    server1:
-      address: "127.0.0.1"
-      user: "ec2-user"
-      dir: "/var/www/project"
-    server2:
-      address: "127.0.0.2"
-      user: "ec2-user"
-      dir: "/var/www/project"
-  tasks:
-    - "install"
-  settings:
-    pathKey: ""
-  files:
+hosts:
+server1:
+  address: "127.0.0.1"
+  user: "ec2-user"
+  dir: "/var/www/project"
+server2:
+  address: "127.0.0.2"
+  user: "ec2-user"
+  dir: "/var/www/project"
+tasks:
+- "install"
+setting:
+pathKey: ""
+files:
 

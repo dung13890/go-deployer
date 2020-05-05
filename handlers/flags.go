@@ -4,6 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/dung13890/go-deployer/config"
+	"github.com/dung13890/go-deployer/utils"
 )
 
 var (
@@ -68,7 +71,7 @@ func setupFlags(f *flag.FlagSet) {
 		f.VisitAll(func(o *flag.Flag) {
 			fmt.Fprintf(os.Stderr,
 				"	%v	%v\n",
-				fillColor("-"+o.Name, colorGreen),
+				utils.FillColor("-"+o.Name, utils.ColorGreen),
 				o.Usage,
 			)
 		})
@@ -77,49 +80,49 @@ func setupFlags(f *flag.FlagSet) {
 
 func printHelp() {
 	fmt.Printf("%s\n	truck [flags] [<commands>] [args ...]\n\n%s\n",
-		fillColor("Usage:", colorYellow),
-		fillColor("Flags:", colorYellow),
+		utils.FillColor("Usage:", utils.ColorYellow),
+		utils.FillColor("Flags:", utils.ColorYellow),
 	)
 	setupFlags(globalCommand)
 	globalCommand.Usage()
 	fmt.Printf("\n%s\n",
-		fillColor("Commands:", colorYellow),
+		utils.FillColor("Commands:", utils.ColorYellow),
 	)
 	// Ping command
 	fmt.Printf("	%s	%s	%s\n",
-		fillColor(pingCommand.Name, colorGreen),
+		utils.FillColor(pingCommand.Name, utils.ColorGreen),
 		pingCommand.Description,
-		fillColor(pingCommand.Example, colorCyan),
+		utils.FillColor(pingCommand.Example, utils.ColorCyan),
 	)
 	// Coppy Command
 	fmt.Printf("	%s	%s	%s\n",
-		fillColor(copyCommand.Name, colorGreen),
+		utils.FillColor(copyCommand.Name, utils.ColorGreen),
 		copyCommand.Description,
-		fillColor(copyCommand.Example, colorCyan),
+		utils.FillColor(copyCommand.Example, utils.ColorCyan),
 	)
 
 	// Deploy Command
 	fmt.Printf("	%s	%s	%s\n",
-		fillColor(deployCommand.Name, colorGreen),
+		utils.FillColor(deployCommand.Name, utils.ColorGreen),
 		deployCommand.Description,
-		fillColor(deployCommand.Example, colorCyan),
+		utils.FillColor(deployCommand.Example, utils.ColorCyan),
 	)
 }
 
 func printCommand(c command) {
 	setupFlags(c.Flag)
 	fmt.Printf("%s\n	%s\n\n%s\n	%s	%s\n\n%s\n",
-		fillColor("Usage:", colorYellow),
+		utils.FillColor("Usage:", utils.ColorYellow),
 		c.Example,
-		fillColor("Commands:", colorYellow),
-		fillColor(c.Name, colorGreen),
+		utils.FillColor("Commands:", utils.ColorYellow),
+		utils.FillColor(c.Name, utils.ColorGreen),
 		c.Description,
-		fillColor("Flags:", colorYellow),
+		utils.FillColor("Flags:", utils.ColorYellow),
 	)
 	c.Flag.Usage()
 }
 
-func Run() {
+func Run(c config.Configuration) {
 	globalCommand.Parse(os.Args[1:])
 	if len(os.Args) < 2 || showHelp {
 		printHelp()
@@ -154,7 +157,7 @@ func Run() {
 		}
 
 		p := ping{}
-		p.run()
+		p.exec(c)
 	}
 	if copyCommand.Flag.Parsed() {
 		if *copyCommand.BoolFlags["help"] {

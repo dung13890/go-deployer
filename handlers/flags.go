@@ -146,9 +146,10 @@ func Run(c config.Configuration) {
 			printCommand(deployCommand)
 			os.Exit(1)
 		}
-		tag := *deployCommand.StringFlags["tag"]
-		branch := *deployCommand.StringFlags["branch"]
-		deploy(tag, branch)
+		// tag := *deployCommand.StringFlags["tag"]
+		// branch := *deployCommand.StringFlags["branch"]
+		d := deploy{}
+		d.exec(c)
 	}
 	if pingCommand.Flag.Parsed() {
 		if *pingCommand.BoolFlags["help"] {

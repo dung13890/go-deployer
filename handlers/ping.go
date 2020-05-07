@@ -6,11 +6,9 @@ import (
 	"sync"
 
 	"github.com/dung13890/go-deployer/config"
-	"github.com/dung13890/go-deployer/utils"
 )
 
 type ping struct {
-	Client []client
 }
 
 func (p *ping) exec(c config.Configuration) {
@@ -24,30 +22,31 @@ func (p *ping) exec(c config.Configuration) {
 		wg.Add(1)
 		go func(w *sync.WaitGroup, s config.Server, k string, i int) {
 			defer w.Done()
-			r := &remoteScript{}
-			defer r.close()
-			r.Color = utils.ClientColors[i%len(utils.ClientColors)]
-			if err := r.connection(s.Address, s.User, pathKey); err != nil {
-				er <- r.showErr(k, err)
+			var h remote = &host{}
+			defer h.close()
+			h.load(k, s, i)
+			if err := h.connect(pathKey); err != nil {
+				er <- fmt.Sprintf("[%s] [Failed]", k)
 				log.Print(err)
 				return
 			}
-			r.run("uname -a")
-			rs <- r.showOut(k)
+			h.run("uname -a")
+			rs <- fmt.Sprintf("[%s] OK!", k)
 		}(&wg, s, k, i)
 
 	}
 	wg.Wait()
-	close(rs)
 	for i := 0; i < len(c.Hosts); i++ {
 		select {
 		case rv := <-rs:
-			fmt.Print(rv)
+			fmt.Println(rv)
 		case e := <-er:
 			fmt.Println(e)
 		default:
 			fmt.Println("")
 		}
 	}
+	close(rs)
+	close(er)
 	return
 }

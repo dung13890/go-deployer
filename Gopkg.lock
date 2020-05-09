@@ -2,6 +2,33 @@
 
 
 [[projects]]
+  digest = "1:2a4b69c9d40885c0201768fe56443420261fe1ab6816f292b96dcebe96bbf50a"
+  name = "github.com/gosuri/uilive"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "11a6ee751a6abd840dd858d3ce569bdddb7d8ba2"
+  version = "v0.0.4"
+
+[[projects]]
+  digest = "1:f6ae4b3c3d4411bffa0b8045fff29974e1eb866e1828786972059f89a130aecf"
+  name = "github.com/gosuri/uiprogress"
+  packages = [
+    ".",
+    "util/strutil",
+  ]
+  pruneopts = "UT"
+  revision = "d0567a9d84a1c40dd7568115ea66f4887bf57b33"
+  version = "0.0.1"
+
+[[projects]]
+  digest = "1:0c58d31abe2a2ccb429c559b6292e7df89dcda675456fecc282fa90aa08273eb"
+  name = "github.com/mattn/go-isatty"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "7b513a986450394f7bbf1476909911b3aa3a55ce"
+  version = "v0.0.12"
+
+[[projects]]
   branch = "master"
   digest = "1:6481b321e52388f6d8a66f6f0fb8cd64c51a704acc9b94b793579f19dc87aa49"
   name = "golang.org/x/crypto"
@@ -21,9 +48,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0110babbeb34e338aca6f831fcd8c4eb32a5e5844ca1b8d25a95a56308028e53"
+  digest = "1:32c9daa22a90424f14ab496550bbbb3ea78b61bc5f9f6fd024f4bad77b6722cd"
   name = "golang.org/x/sys"
-  packages = ["cpu"]
+  packages = [
+    "cpu",
+    "internal/unsafeheader",
+    "unix",
+  ]
   pruneopts = "UT"
   revision = "bc7a7d42d5c30f4d0fe808715c002826ce2c624e"
 
@@ -39,6 +70,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/gosuri/uiprogress",
     "golang.org/x/crypto/ssh",
     "gopkg.in/yaml.v2",
   ]

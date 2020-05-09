@@ -39,7 +39,8 @@ func init() {
 		"branch": deployCommand.Flag.String("b", "", "Branches to build ex:[truck deploy -b=master]"),
 	}
 	deployCommand.BoolFlags = map[string]*bool{
-		"help": deployCommand.Flag.Bool("h", false, "Display this help message for deploy"),
+		"help":   deployCommand.Flag.Bool("h", false, "Display this help message for deployment"),
+		"logged": deployCommand.Flag.Bool("l", false, "Display this show log output when deployment"),
 	}
 
 	pingCommand = command{
@@ -146,10 +147,11 @@ func Run(c config.Configuration) {
 			printCommand(deployCommand)
 			os.Exit(1)
 		}
-		// tag := *deployCommand.StringFlags["tag"]
-		// branch := *deployCommand.StringFlags["branch"]
-		d := deploy{}
-		d.exec(c)
+		tag := *deployCommand.StringFlags["tag"]
+		branch := *deployCommand.StringFlags["branch"]
+		logged := *deployCommand.BoolFlags["logged"]
+		d := deploySetup(c, tag, branch, logged)
+		d.exec()
 	}
 	if pingCommand.Flag.Parsed() {
 		if *pingCommand.BoolFlags["help"] {
@@ -157,8 +159,8 @@ func Run(c config.Configuration) {
 			os.Exit(1)
 		}
 
-		p := ping{}
-		p.exec(c)
+		p := pingSetup(c)
+		p.exec()
 	}
 	if copyCommand.Flag.Parsed() {
 		if *copyCommand.BoolFlags["help"] {

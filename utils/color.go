@@ -24,3 +24,7 @@ var ClientColors = []string{
 func FillColor(text string, color string) string {
 	return fmt.Sprintf("%s%s%s", color, text, ColorReset)
 }
+
+func ResetColor() {
+	fmt.Println(ColorReset)
+}

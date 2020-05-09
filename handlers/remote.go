@@ -7,10 +7,13 @@ import (
 type remote interface {
 	load(name string, server config.Server, index int)
 	loadTask(tasks []string)
+	makeString(str string) string
 	connect(pathKey string, port ...string) error
-	shell() error
+	shell(cf callbackFunc) error
 	run(cmd string) error
-	printOut(in string, out string)
-	muxShell() error
+	showOut(in string, out string) string
+	muxShell(cf callbackFunc) error
 	close() error
 }
+
+type callbackFunc func(out string)

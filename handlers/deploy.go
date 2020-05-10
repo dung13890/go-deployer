@@ -20,12 +20,16 @@ type deploy struct {
 
 func deploySetup(c config.Configuration, tag string, branch string, logged bool) *deploy {
 	pathKey := c.GetPathKey()
+	tasks := []string{
+		"go --version",
+		"exit",
+	}
 	return &deploy{
 		hosts:   c.Hosts,
 		pathKey: pathKey,
 		tag:     tag,
 		branch:  branch,
-		tasks:   c.Tasks,
+		tasks:   tasks,
 		logged:  logged,
 	}
 }

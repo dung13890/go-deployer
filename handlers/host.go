@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"os"
 	"sync"
 
 	"github.com/dung13890/go-deployer/config"
@@ -122,7 +123,6 @@ func (h *host) run(cmd string) error {
 	if err = sess.RequestPty("vt220", 80, 40, modes); err != nil {
 		return err
 	}
-
 	if h.stdout, err = sess.StdoutPipe(); err != nil {
 		return err
 	}
@@ -149,6 +149,7 @@ func (h *host) showOut(in string, out string) string {
 func (h *host) muxShell(cf callbackFunc) error {
 	in := make(chan string, 10)
 	out := make(chan string, 10)
+	errC := make(chan string, 10)
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	go func() {
@@ -165,6 +166,7 @@ func (h *host) muxShell(cf callbackFunc) error {
 			if err == io.EOF {
 				close(in)
 				close(out)
+				// close(errC)
 				break
 			}
 			t += n
@@ -175,11 +177,19 @@ func (h *host) muxShell(cf callbackFunc) error {
 		}
 		wg.Done()
 	}()
+
+	go func() {
+		io.Copy(os.Stderr, h.stderr)
+	}()
 	<-out
 	for _, cmd := range h.tasks {
 		in <- cmd
-		strOut := h.showOut(cmd, <-out)
-		cf(strOut)
+		select {
+		case stdOut := <-out:
+			cf(h.showOut(cmd, stdOut))
+		case stdError := <-errC:
+			fmt.Println(stdError)
+		}
 	}
 
 	wg.Wait()

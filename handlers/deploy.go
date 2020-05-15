@@ -3,10 +3,16 @@ package handlers
 import (
 	"fmt"
 	"log"
+	"strings"
 	"sync"
 
 	"github.com/dung13890/go-deployer/config"
 	"github.com/gosuri/uiprogress"
+	"github.com/gosuri/uiprogress/util/strutil"
+)
+
+const (
+	dir string = "/data/sites"
 )
 
 type deploy struct {
@@ -20,18 +26,29 @@ type deploy struct {
 
 func deploySetup(c config.Configuration, tag string, branch string, logged bool) *deploy {
 	pathKey := c.GetPathKey()
-	tasks := []string{
-		"go --version",
-		"exit",
-	}
-	return &deploy{
+	d := &deploy{
 		hosts:   c.Hosts,
 		pathKey: pathKey,
 		tag:     tag,
 		branch:  branch,
-		tasks:   tasks,
 		logged:  logged,
 	}
+	d.loadTask(c)
+
+	return d
+}
+
+func (d *deploy) loadTask(c config.Configuration) []string {
+	projectName := strings.Replace(c.Setting.Name, " ", "", -1)
+	shareDir := fmt.Sprintf("%s/%s/shared", dir, projectName)
+	tasks := []string{
+		"sudo mkdir -p " + shareDir,
+		"sudo chown -R $USER:$USER " + shareDir,
+		"cd " + shareDir,
+	}
+	d.tasks = append(tasks, c.Tasks...)
+
+	return tasks
 }
 
 func (d *deploy) exec() {
@@ -78,7 +95,7 @@ func (d *deploy) running(wg *sync.WaitGroup, se config.Server, name string, inde
 		if b.Current() != 0 {
 			strCommand = d.tasks[b.Current()-1]
 		}
-		return h.makeString(strCommand)
+		return strutil.Resize(h.makeString(strCommand), 30)
 	})
 
 	h.loadTask(d.tasks)

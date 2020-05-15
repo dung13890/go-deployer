@@ -5,7 +5,6 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"os"
 	"sync"
 
 	"github.com/dung13890/go-deployer/config"
@@ -101,7 +100,7 @@ func (h *host) shell(cf callbackFunc) error {
 	if h.stderr, err = sess.StderrPipe(); err != nil {
 		return err
 	}
-	if err = sess.Shell(); err != nil {
+	if err = sess.Start("/bin/sh;set -x;"); err != nil {
 		return err
 	}
 	h.muxShell(cf)
@@ -142,7 +141,7 @@ func (h *host) run(cmd string) error {
 }
 
 func (h *host) showOut(in string, out string) string {
-	stdOut := fmt.Sprintf("%s\n%s", in, out)
+	stdOut := fmt.Sprintf("%s\n%s\n", in, out)
 	return h.makeString(stdOut)
 }
 
@@ -178,9 +177,10 @@ func (h *host) muxShell(cf callbackFunc) error {
 		wg.Done()
 	}()
 
-	go func() {
-		io.Copy(os.Stderr, h.stderr)
-	}()
+	// go func() {
+	// 	io.Copy(os.Stderr, h.stderr)
+	// }()
+	// ignore the shell output
 	<-out
 	for _, cmd := range h.tasks {
 		in <- cmd
@@ -191,6 +191,8 @@ func (h *host) muxShell(cf callbackFunc) error {
 			fmt.Println(stdError)
 		}
 	}
+	in <- "exit"
+	<-out
 
 	wg.Wait()
 

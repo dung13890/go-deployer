@@ -19,21 +19,27 @@ type Configuration struct {
 type Server struct {
 	Address string `yaml:"address"`
 	User    string `yaml:"user"`
-	Dir     string `yaml:"dir"`
 }
 
 type Setting struct {
 	PathKey string `yaml:"pathKey"`
+	PathEnv string `yaml:"pathEnv"`
+	Repo    string `yaml:"repo"`
+	Name    string `yaml:"name"`
 }
 
 func (c *Configuration) ReadFile() {
 	file, err := ioutil.ReadFile("./config.yml")
 	if err != nil {
-		log.Fatal("Error loading yml file")
+		log.Fatal("Error: loading yml file")
 	}
 	errY := yaml.Unmarshal(file, &c)
 	if errY != nil {
-		log.Fatalf("error: %v", errY)
+		log.Fatalf("Error: %v", errY)
+	}
+
+	if c.Setting.Repo == "" || c.Setting.Name == "" {
+		log.Fatalf("Error: Please config repository")
 	}
 }
 
